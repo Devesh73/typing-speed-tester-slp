@@ -12,7 +12,8 @@ function startTest() {
     document.getElementById("typingArea").value = "";
     document.getElementById("typingArea").disabled = false;
     document.getElementById("typingArea").focus();
-    startTime = new Date().getTime();
+    document.getElementById("result").innerText = "";
+    startTime = null; // Reset start time to ensure accurate measurement
 }
 
 function restartTest() {
@@ -23,12 +24,17 @@ function restartTest() {
 }
 
 document.getElementById("typingArea").addEventListener("input", function () {
+    if (!startTime) {
+        startTime = new Date().getTime(); // Start time when the user starts typing
+    }
+
     if (this.value === selectedText) {
         endTime = new Date().getTime();
-        let timeTaken = (endTime - startTime) / 1000;  // Issue: Incorrect time tracking
+        let timeTaken = (endTime - startTime) / 1000;
         let words = selectedText.split(" ").length;
-        let wpm = Math.round((words / timeTaken) * 60); // Issue: Calculation not accurate
+        let wpm = Math.round((words / timeTaken) * 60);
+
         document.getElementById("result").innerText = `You typed at ${wpm} words per minute!`;
-        // Issue: Textarea remains enabled, user can still type
+        document.getElementById("typingArea").disabled = true; // Disable typing area
     }
 });
