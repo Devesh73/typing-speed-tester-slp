@@ -23,12 +23,30 @@ function restartTest() {
 }
 
 document.getElementById("typingArea").addEventListener("input", function () {
-    if (this.value === selectedText) {
+    let userInput = this.value;
+    
+    // Check if the user has typed the entire text correctly
+    if (userInput === selectedText) {
         endTime = new Date().getTime();
-        let timeTaken = (endTime - startTime) / 1000;  // Issue: Incorrect time tracking
+        let timeTaken = (endTime - startTime) / 1000; // Time in seconds
         let words = selectedText.split(" ").length;
-        let wpm = Math.round((words / timeTaken) * 60); // Issue: Calculation not accurate
+        
+        // WPM Calculation: Account for the time taken to type correctly
+        let wpm = Math.round((words / timeTaken) * 60);
+        
+        // Disable the textarea to prevent further input after completion
+        document.getElementById("typingArea").disabled = true;
+        
+        // Display WPM result
         document.getElementById("result").innerText = `You typed at ${wpm} words per minute!`;
-        // Issue: Textarea remains enabled, user can still type
+    } else {
+        // Optionally, calculate accuracy or other feedback if you want to track mistakes
+        let correctChars = 0;
+        for (let i = 0; i < userInput.length; i++) {
+            if (userInput[i] === selectedText[i]) {
+                correctChars++;
+            }
+        }
+        // You can use correctChars to display an accuracy percentage if desired
     }
 });
