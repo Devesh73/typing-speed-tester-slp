@@ -25,10 +25,13 @@ function restartTest() {
 document.getElementById("typingArea").addEventListener("input", function () {
     if (this.value === selectedText) {
         endTime = new Date().getTime();
-        let timeTaken = (endTime - startTime) / 1000;  // Issue: Incorrect time tracking
-        let words = selectedText.split(" ").length;
-        let wpm = Math.round((words / timeTaken) * 60); // Issue: Calculation not accurate
+        let timeTaken = (endTime - startTime) / 1000;  // Time in seconds
+        let words = selectedText.split(" ").length;  // Number of words in the sentence
+        let wpm = Math.round((words / timeTaken) * 60); // Words per minute calculation
+
         document.getElementById("result").innerText = `You typed at ${wpm} words per minute!`;
-        // Issue: Textarea remains enabled, user can still type
+        
+        // Disable the textarea once the user finishes typing
+        document.getElementById("typingArea").disabled = true;
     }
 });
