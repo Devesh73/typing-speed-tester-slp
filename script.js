@@ -29,6 +29,7 @@ document.getElementById("typingArea").addEventListener("input", function () {
         let words = selectedText.split(" ").length;
         let wpm = Math.round((words / timeTaken) * 60); // Issue: Calculation not accurate
         document.getElementById("result").innerText = `You typed at ${wpm} words per minute!`;
-        // Issue: Textarea remains enabled, user can still type
+        document.getElementById("typingArea").disabled = true;
+        // fixed: disabled the textarea
     }
 });
