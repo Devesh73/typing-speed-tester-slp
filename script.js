@@ -20,35 +20,38 @@ function restartTest() {
     document.getElementById("textToType").innerText = "Click 'Start' to begin the test.";
     document.getElementById("result").innerText = "";
     document.getElementById("typingArea").disabled = true;
+    startTime = null;  // Reset the start time
+    endTime = null;  // Reset the end time
+    selectedText = null;  // Reset the selected text
 }
 
 document.getElementById("typingArea").addEventListener("input", function () {
     let typedText = this.value;
     let targetText = selectedText;
 
-    // Create a string where each word is checked and color-coded
+    // Create a string where each character is checked and color-coded
     let feedbackText = '';
     
-    let typedWords = typedText.split(/\s+/);
-    let targetWords = targetText.split(/\s+/);
+    // Compare each character and color the feedback
+    for (let i = 0; i < typedText.length; i++) {
+        let typedChar = typedText[i];
+        let targetChar = targetText[i];
 
-    // Compare each word and color the feedback
-    typedWords.forEach((word, index) => {
-        let targetWord = targetWords[index] || ''; // If there are fewer words typed than the target
-        if (word === targetWord) {
-            feedbackText += `<span style="color: green">${word}</span> `;
+        // If the character is correct, color it green; if not, color it red
+        if (typedChar === targetChar) {
+            feedbackText += `<span style="color: green">${typedChar}</span>`;
         } else {
-            feedbackText += `<span style="color: red">${word}</span> `;
+            feedbackText += `<span style="color: red">${typedChar}</span>`;
         }
-    });
+    }
 
-    // Append the rest of the target text (if the user typed fewer words)
-    if (typedWords.length < targetWords.length) {
-        feedbackText += targetWords.slice(typedWords.length).map(word => `<span style="color: grey">${word}</span>`).join(' ');
+    // If there are any remaining characters in the target text (after typing less than the full text), color them grey
+    if (typedText.length < targetText.length) {
+        feedbackText += targetText.slice(typedText.length).split('').map(char => `<span style="color: grey">${char}</span>`).join('');
     }
 
     // Update the feedback display
-    document.getElementById("textToType").innerHTML = feedbackText.trim();
+    document.getElementById("textToType").innerHTML = feedbackText;
 
     // Check if the user has typed everything correctly
     if (typedText === targetText) {
@@ -59,7 +62,7 @@ document.getElementById("typingArea").addEventListener("input", function () {
         let wpm = Math.round(words / timeTaken);
 
         if (timeTaken < 0.1) {
-            document.getElementById("result").innerText = `Too fast! Try again.`;
+            document.getElementById("result").innerText = "Too fast! Try again.";
         } else {
             document.getElementById("result").innerText = `You typed at ${wpm} words per minute!`;
         }
