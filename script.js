@@ -1,54 +1,26 @@
-const sampleTexts = [
-    "The quick brown fox jumps over the lazy dog.",
-    "Typing speed tests are fun and challenging.",
-    "Improve your typing by practicing every day."
-];
-
-let startTime, endTime, selectedText;
-
-function startTest() {
-    selectedText = sampleTexts[Math.floor(Math.random() * sampleTexts.length)];
-    document.getElementById("textToType").innerText = selectedText;
-    document.getElementById("typingArea").value = "";
-    document.getElementById("typingArea").disabled = false;
-    document.getElementById("typingArea").focus();
-    startTime = performance.now(); // More precise timing
-}
-
-function restartTest() {
-    document.getElementById("typingArea").value = "";
-    document.getElementById("textToType").innerText = "Click 'Start' to begin the test.";
-    document.getElementById("result").innerText = "";
-    document.getElementById("typingArea").disabled = true;
-}
-
 document.getElementById("typingArea").addEventListener("input", function () {
     let typedText = this.value;
     let targetText = selectedText;
 
-    // Create a string where each word is checked and color-coded
+    // Create a string where each character is checked and color-coded
     let feedbackText = '';
-    
-    let typedWords = typedText.split(/\s+/);
-    let targetWords = targetText.split(/\s+/);
 
-    // Compare each word and color the feedback
-    typedWords.forEach((word, index) => {
-        let targetWord = targetWords[index] || ''; // If there are fewer words typed than the target
-        if (word === targetWord) {
-            feedbackText += `<span style="color: green">${word}</span> `;
+    // Compare each character
+    for (let i = 0; i < typedText.length; i++) {
+        if (typedText[i] === targetText[i]) {
+            feedbackText += `<span style="color: green">${typedText[i]}</span>`;
         } else {
-            feedbackText += `<span style="color: red">${word}</span> `;
+            feedbackText += `<span style="color: red">${typedText[i]}</span>`;
         }
-    });
+    }
 
-    // Append the rest of the target text (if the user typed fewer words)
-    if (typedWords.length < targetWords.length) {
-        feedbackText += targetWords.slice(typedWords.length).map(word => `<span style="color: grey">${word}</span>`).join(' ');
+    // Append the rest of the target text if the user typed fewer characters
+    if (typedText.length < targetText.length) {
+        feedbackText += targetText.slice(typedText.length).split('').map(char => `<span style="color: grey">${char}</span>`).join('');
     }
 
     // Update the feedback display
-    document.getElementById("textToType").innerHTML = feedbackText.trim();
+    document.getElementById("textToType").innerHTML = feedbackText;
 
     // Check if the user has typed everything correctly
     if (typedText === targetText) {
